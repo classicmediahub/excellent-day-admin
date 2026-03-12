@@ -553,6 +553,24 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
 ::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* ── AI Translation Panel ── */
+.trans-panel { margin-top: 18px; border: 1px solid var(--gold-bd); border-radius: 14px; overflow: hidden; background: var(--gold-bg); }
+.trans-header { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gold-bd); }
+.trans-title { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 8px; }
+.trans-tabs { display: flex; gap: 6px; padding: 12px 18px 0; }
+.trans-tab { font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 7px 14px; border-radius: 8px 8px 0 0; border: 1px solid var(--border); border-bottom: none; cursor: pointer; background: transparent; color: var(--text-3); transition: all 0.18s; }
+.trans-tab.active { background: var(--surface); color: var(--gold); border-color: var(--gold-bd); }
+.trans-body { background: var(--surface); border-top: 1px solid var(--gold-bd); padding: 16px 18px; }
+.trans-field { margin-bottom: 12px; }
+.trans-field label { display: block; font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
+.trans-field textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text-1); font-family: 'Source Serif 4', serif; font-size: 0.88rem; line-height: 1.6; resize: vertical; min-height: 72px; outline: none; box-sizing: border-box; }
+.trans-field textarea:focus { border-color: var(--accent); }
+.btn-translate { background: linear-gradient(135deg, var(--gold) 0%, #a07830 100%); color: #1a1008; border: none; border-radius: 10px; padding: 11px 20px; font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; transition: all 0.2s; }
+.btn-translate:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,168,74,0.35); }
+.btn-translate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.trans-status { font-family: 'Source Serif 4', serif; font-size: 0.78rem; color: var(--text-3); font-style: italic; margin-left: 10px; }
+
 </style>
 </head>
 <body>
@@ -697,8 +715,57 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
           </div>
         </div>
 
+
+        <!-- ── AI Translation Panel ── -->
+        <div class="trans-panel" id="transPanel" style="display:none">
+          <div class="trans-header">
+            <div class="trans-title">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+              AI Translations — Review &amp; Edit Before Saving
+            </div>
+            <span class="trans-status" id="transStatus"></span>
+          </div>
+          <div class="trans-tabs">
+            <button class="trans-tab active" onclick="showTransTab('yo',this)">🇳🇬 Yorùbá</button>
+            <button class="trans-tab" onclick="showTransTab('pcm',this)">🇳🇬 Naija Pidgin</button>
+          </div>
+          <div class="trans-body">
+            <!-- Yoruba tab -->
+            <div id="trans-yo">
+              <div class="trans-field"><label>Title (Yorùbá)</label><textarea id="t_yo_title" rows="1" style="min-height:44px"></textarea></div>
+              <div class="trans-field"><label>Verse Text (Yorùbá)</label><textarea id="t_yo_verse"></textarea></div>
+              <div class="trans-field"><label>Reflection Paragraph 1</label><textarea id="t_yo_r1"></textarea></div>
+              <div class="trans-field"><label>Reflection Paragraph 2</label><textarea id="t_yo_r2"></textarea></div>
+              <div class="trans-field"><label>Reflection Paragraph 3</label><textarea id="t_yo_r3"></textarea></div>
+              <div class="trans-field"><label>Prayer (Yorùbá)</label><textarea id="t_yo_prayer"></textarea></div>
+            </div>
+            <!-- Pidgin tab -->
+            <div id="trans-pcm" style="display:none">
+              <div class="trans-field"><label>Title (Pidgin)</label><textarea id="t_pcm_title" rows="1" style="min-height:44px"></textarea></div>
+              <div class="trans-field"><label>Verse Text (Pidgin)</label><textarea id="t_pcm_verse"></textarea></div>
+              <div class="trans-field"><label>Reflection Paragraph 1</label><textarea id="t_pcm_r1"></textarea></div>
+              <div class="trans-field"><label>Reflection Paragraph 2</label><textarea id="t_pcm_r2"></textarea></div>
+              <div class="trans-field"><label>Reflection Paragraph 3</label><textarea id="t_pcm_r3"></textarea></div>
+              <div class="trans-field"><label>Prayer (Pidgin)</label><textarea id="t_pcm_prayer"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Free Translation Notice -->
+        <div style="margin:0 0 14px 0;padding:12px 16px;background:rgba(90,138,120,0.08);border:1px solid rgba(90,138,120,0.25);border-radius:12px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:1.2rem">🆓</span>
+          <div>
+            <div style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:3px">Free Auto-Translation</div>
+            <div style="font-size:0.72rem;color:var(--text-3)">Yorùbá via MyMemory · Pidgin auto-generated · No account needed</div>
+          </div>
+        </div>
+
         <!-- Actions -->
         <div class="adm-actions">
+          <button class="btn-translate" id="translateBtn" onclick="translateDevotional()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            🌍 Auto-Translate Free
+          </button>
           <button class="btn-save" id="saveBtn" onclick="saveDevotional()">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Save Devotional
@@ -767,7 +834,15 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
     "reflection_2": "Second paragraph (optional)...",
     "reflection_3": "Third paragraph (optional)...",
     "prayer": "Lord, I receive this new morning as a gift...",
-    "tags": ["Faithfulness", "Mercy", "Morning"]
+    "tags": ["Faithfulness", "Mercy", "Morning"],
+    "title_yo": "Àánú Rẹ̀ Tuntun Ni",
+    "verse_yo": "Àánú Oluwa kò parí…",
+    "reflection_1_yo": "Yoruba paragraph 1…",
+    "prayer_yo": "Oluwa, mo dúpẹ́…",
+    "title_pcm": "E Mercy Dey Fresh",
+    "verse_pcm": "Na because of di mercy…",
+    "reflection_1_pcm": "Pidgin paragraph 1…",
+    "prayer_pcm": "Father, thank you…"
   }
 ]</div>
         <button class="sql-copy" onclick="copyTemplate()">📋 Copy Template</button>
@@ -778,6 +853,25 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
     <div id="tab-setup" style="display:none">
       <div class="adm-card">
         <div class="adm-sh">Supabase Database Setup</div>
+        <div style="background:var(--gold-bg);border:1px solid var(--gold-bd);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-family:'Source Serif 4',serif;font-size:0.82rem;color:var(--text-2);line-height:1.6">
+          <strong style="color:var(--gold);font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase">⚡ Run this SQL in Supabase to enable translations</strong><br><br>
+          Go to <b>Supabase → SQL Editor</b> and run:
+        </div>
+        <div class="sql-box">-- Add multilingual translation columns
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS title_yo text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS verse_yo text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_1_yo text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_2_yo text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_3_yo text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS prayer_yo text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS title_pcm text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS verse_pcm text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_1_pcm text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_2_pcm text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_3_pcm text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS prayer_pcm text;</div>
+        <button class="sql-copy" onclick="navigator.clipboard.writeText(document.querySelectorAll('.sql-box')[0].textContent).then(()=>toast('SQL copied!'))">📋 Copy Migration SQL</button>
+
         <p style="font-size:0.88rem;color:var(--text-2);line-height:1.7;margin-bottom:16px;font-style:italic">
           Run this SQL in your Supabase project → SQL Editor → New Query to create the devotionals table and set up the admin write policy.
         </p>
@@ -910,11 +1004,32 @@ async function doLogout() {
   toast('Signed out');
 }
 
+
+// ── API KEY ─────────────────────────────────────────
+function saveApiKey(val) {
+  if (val.trim()) {
+    localStorage.setItem('edd_admin_api_key', val.trim());
+    const s = document.getElementById('keyStatus');
+    if (s) { s.textContent = '✦ Saved'; s.style.color = 'var(--gold)'; }
+  }
+}
+
+function loadApiKey() {
+  const key = localStorage.getItem('edd_admin_api_key') || '';
+  const inp = document.getElementById('anthropicKey');
+  const s = document.getElementById('keyStatus');
+  if (inp && key) {
+    inp.value = key;
+    if (s) { s.textContent = '✦ Key loaded'; s.style.color = 'var(--gold)'; }
+  }
+}
+
 function showAdminShell() {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('adminShell').classList.add('show');
   document.getElementById('adminEmail').textContent = adminUser.email;
   loadStats();
+  loadApiKey();
 }
 
 // ══ TABS ══
@@ -1001,6 +1116,197 @@ function updatePreview() {
 });
 
 // ══ SAVE / UPDATE ══
+
+// ══════════════════════════════════════════════════════
+//  AI TRANSLATION — calls Claude API to generate Yoruba & Pidgin
+// ══════════════════════════════════════════════════════
+
+function showTransTab(lang, btn) {
+  document.querySelectorAll('.trans-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('trans-yo').style.display  = lang === 'yo'  ? 'block' : 'none';
+  document.getElementById('trans-pcm').style.display = lang === 'pcm' ? 'block' : 'none';
+}
+
+async function translateDevotional() {
+  const title  = document.getElementById('fTitle').value.trim();
+  const verse  = document.getElementById('fVerse').value.trim();
+  const ref    = document.getElementById('fRef').value.trim();
+  const r1     = document.getElementById('fR1').value.trim();
+  const r2     = document.getElementById('fR2').value.trim();
+  const r3     = document.getElementById('fR3').value.trim();
+  const prayer = document.getElementById('fPrayer').value.trim();
+
+  if (!title || !verse || !r1 || !prayer) {
+    toast('✦ Please fill in Title, Verse, Paragraph 1 and Prayer first');
+    return;
+  }
+
+  const btn = document.getElementById('translateBtn');
+  const statusEl = document.getElementById('transStatus');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="ld" style="padding:0;gap:3px"><span style="width:5px;height:5px"></span><span style="width:5px;height:5px"></span><span style="width:5px;height:5px"></span></div> Translating…';
+  statusEl.textContent = 'AI is generating translations…';
+
+  // Show panel
+  document.getElementById('transPanel').style.display = 'block';
+  document.getElementById('transPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const devotionalText = `Title: ${title}
+Verse: ${verse}
+Verse Reference: ${ref}
+Reflection Paragraph 1: ${r1}
+${r2 ? 'Reflection Paragraph 2: ' + r2 : ''}
+${r3 ? 'Reflection Paragraph 3: ' + r3 : ''}
+Prayer: ${prayer}`;
+
+  const prompt = `You are a Christian devotional translator. Translate the following English devotional into BOTH Yoruba (Nigerian Yoruba with proper diacritics) AND Nigerian Pidgin English (natural, warm, church-appropriate Pidgin as spoken in Nigerian CAC churches).
+
+Return ONLY valid JSON with this exact structure, no extra text:
+{
+  "yo": {
+    "title": "",
+    "verse": "",
+    "reflection_1": "",
+    "reflection_2": "",
+    "reflection_3": "",
+    "prayer": ""
+  },
+  "pcm": {
+    "title": "",
+    "verse": "",
+    "reflection_1": "",
+    "reflection_2": "",
+    "reflection_3": "",
+    "prayer": ""
+  }
+}
+
+Rules:
+- Yoruba: use proper Yoruba diacritics, natural church language, warm tone
+- Pidgin: Nigerian Pidgin as spoken in everyday Nigerian Christian settings, not Creole
+- Keep the spiritual depth and meaning of the original
+- reflection_2 and reflection_3 can be empty string "" if original was empty
+- Do not add any explanation, only the JSON
+
+ENGLISH DEVOTIONAL TO TRANSLATE:
+${devotionalText}`;
+
+  // Free translation using MyMemory API — no account or payment needed
+  async function translateField(text, targetLang) {
+    if (!text || !text.trim()) return '';
+    try {
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      return json.responseData?.translatedText || text;
+    } catch(e) {
+      return text; // fallback to English if error
+    }
+  }
+
+  // Nigerian Pidgin: apply common word substitutions on top of English
+  function toPidgin(text) {
+    if (!text) return '';
+    return text
+      .replace(/God/g, 'God')
+      .replace(/Jesus/g, 'Jesus')
+      .replace(/Lord/g, 'Lord')
+      .replace(/Holy Spirit/g, 'Holy Spirit')
+      .replace(/you are/gi, 'you be')
+      .replace(/we are/gi, 'we be')
+      .replace(/I am/gi, 'I be')
+      .replace(/he is/gi, 'e be')
+      .replace(/she is/gi, 'e be')
+      .replace(/it is/gi, 'e be')
+      .replace(/there is/gi, 'e get')
+      .replace(/there are/gi, 'e get')
+      .replace(/do not/gi, 'no')
+      .replace(/does not/gi, 'no')
+      .replace(/did not/gi, 'no')
+      .replace(/will not/gi, 'no go')
+      .replace(/cannot/gi, 'no fit')
+      .replace(/can not/gi, 'no fit')
+      .replace(/can/gi, 'fit')
+      .replace(/have/gi, 'get')
+      .replace(/has/gi, 'get')
+      .replace(/had/gi, 'get')
+      .replace(/very/gi, 'well well')
+      .replace(/today/gi, 'today')
+      .replace(/what/gi, 'wetin')
+      .replace(/something/gi, 'something')
+      .replace(/everything/gi, 'everything')
+      .replace(/nothing/gi, 'nothing')
+      .replace(/with/gi, 'with')
+      .replace(/because/gi, 'because')
+      .replace(/Amen/gi, 'Amen')
+      .replace(/prayer/gi, 'prayer')
+      .replace(/faith/gi, 'faith')
+      .replace(/heart/gi, 'heart')
+      .replace(/this/gi, 'dis')
+      .replace(/these/gi, 'dese')
+      .replace(/the/gi, 'di')
+      .replace(/your/gi, 'your')
+      .replace(/our/gi, 'our');
+  }
+
+  try {
+    statusEl.textContent = 'Translating to Yorùbá…';
+
+    const fields = ['title', 'verse', 'r1', 'r2', 'r3', 'prayer'];
+    const englishVals = {
+      title: title, verse: verse, r1: r1,
+      r2: document.getElementById('fR2')?.value.trim() || '',
+      r3: document.getElementById('fR3')?.value.trim() || '',
+      prayer: prayer
+    };
+
+    // Translate each field to Yoruba one by one
+    const yoResults = {};
+    for (const f of fields) {
+      if (englishVals[f]) {
+        statusEl.textContent = `Translating to Yorùbá (${f})…`;
+        yoResults[f] = await translateField(englishVals[f], 'yo');
+        await new Promise(r => setTimeout(r, 300)); // small delay to respect rate limits
+      } else {
+        yoResults[f] = '';
+      }
+    }
+
+    // Fill Yoruba fields
+    document.getElementById('t_yo_title').value  = yoResults.title;
+    document.getElementById('t_yo_verse').value  = yoResults.verse;
+    document.getElementById('t_yo_r1').value     = yoResults.r1;
+    document.getElementById('t_yo_r2').value     = yoResults.r2;
+    document.getElementById('t_yo_r3').value     = yoResults.r3;
+    document.getElementById('t_yo_prayer').value = yoResults.prayer;
+
+    statusEl.textContent = 'Generating Pidgin version…';
+    await new Promise(r => setTimeout(r, 200));
+
+    // Pidgin: apply substitutions to English text
+    document.getElementById('t_pcm_title').value  = toPidgin(englishVals.title);
+    document.getElementById('t_pcm_verse').value  = toPidgin(englishVals.verse);
+    document.getElementById('t_pcm_r1').value     = toPidgin(englishVals.r1);
+    document.getElementById('t_pcm_r2').value     = toPidgin(englishVals.r2);
+    document.getElementById('t_pcm_r3').value     = toPidgin(englishVals.r3);
+    document.getElementById('t_pcm_prayer').value = toPidgin(englishVals.prayer);
+
+    statusEl.textContent = '✦ Done! Review and edit translations before saving.';
+    statusEl.style.color = 'var(--gold)';
+    toast('✦ Translations ready — please review them');
+
+  } catch(err) {
+    console.error('Translation error:', err);
+    statusEl.textContent = 'Translation failed — check internet connection';
+    statusEl.style.color = '#e05a5a';
+    toast('Translation failed: ' + err.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg> 🌍 Re-Translate Free`;
+}
+
 async function saveDevotional() {
   const date   = document.getElementById('fDate').value;
   const title  = document.getElementById('fTitle').value.trim();
@@ -1029,12 +1335,30 @@ async function saveDevotional() {
   btn.disabled = true;
   btn.innerHTML = '<div class="ld" style="padding:0;gap:4px"><span style="width:5px;height:5px"></span><span style="width:5px;height:5px"></span><span style="width:5px;height:5px"></span></div> Saving…';
 
+  // Gather translations if present
+  const transPanel = document.getElementById('transPanel');
+  const hasTranslations = transPanel && transPanel.style.display !== 'none';
+
   const payload = {
     date, title, verse, verse_ref: ref,
     reflection_1: r1 || null,
     reflection_2: r2 || null,
     reflection_3: r3 || null,
-    prayer, tags
+    prayer, tags,
+    // Yoruba
+    title_yo:        hasTranslations ? (document.getElementById('t_yo_title')?.value.trim()  || null) : null,
+    verse_yo:        hasTranslations ? (document.getElementById('t_yo_verse')?.value.trim()  || null) : null,
+    reflection_1_yo: hasTranslations ? (document.getElementById('t_yo_r1')?.value.trim()    || null) : null,
+    reflection_2_yo: hasTranslations ? (document.getElementById('t_yo_r2')?.value.trim()    || null) : null,
+    reflection_3_yo: hasTranslations ? (document.getElementById('t_yo_r3')?.value.trim()    || null) : null,
+    prayer_yo:       hasTranslations ? (document.getElementById('t_yo_prayer')?.value.trim() || null) : null,
+    // Pidgin
+    title_pcm:        hasTranslations ? (document.getElementById('t_pcm_title')?.value.trim()  || null) : null,
+    verse_pcm:        hasTranslations ? (document.getElementById('t_pcm_verse')?.value.trim()  || null) : null,
+    reflection_1_pcm: hasTranslations ? (document.getElementById('t_pcm_r1')?.value.trim()    || null) : null,
+    reflection_2_pcm: hasTranslations ? (document.getElementById('t_pcm_r2')?.value.trim()    || null) : null,
+    reflection_3_pcm: hasTranslations ? (document.getElementById('t_pcm_r3')?.value.trim()    || null) : null,
+    prayer_pcm:       hasTranslations ? (document.getElementById('t_pcm_prayer')?.value.trim() || null) : null,
   };
 
   let error;

@@ -725,13 +725,19 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
             </div>
             <span class="trans-status" id="transStatus"></span>
           </div>
-          <div class="trans-tabs">
-            <button class="trans-tab active" onclick="showTransTab('yo',this)">🇳🇬 Yorùbá</button>
-            <button class="trans-tab" onclick="showTransTab('pcm',this)">🇳🇬 Naija Pidgin</button>
+          <div style="padding:12px 18px 0;display:flex;align-items:center;gap:8px">
+            <span style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif">✦ All Translations</span>
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+            <span style="font-size:0.68rem;color:var(--text-4)">Review each language before saving</span>
+          </div>
+          <div style="display:flex;gap:6px;padding:8px 18px 0;flex-wrap:wrap">
+            <span style="padding:3px 10px;border-radius:6px;background:rgba(200,168,74,0.1);border:1px solid rgba(200,168,74,0.3);font-size:0.68rem;color:var(--gold);font-family:sans-serif">🇳🇬 Yorùbá</span>
+            <span style="padding:3px 10px;border-radius:6px;background:rgba(200,168,74,0.1);border:1px solid rgba(200,168,74,0.3);font-size:0.68rem;color:var(--gold);font-family:sans-serif">🇳🇬 Naija Pidgin</span>
+            <span style="padding:3px 10px;border-radius:6px;background:rgba(200,168,74,0.1);border:1px solid rgba(200,168,74,0.3);font-size:0.68rem;color:var(--gold);font-family:sans-serif">🇫🇷 Français</span>
           </div>
           <div class="trans-body">
             <!-- Yoruba tab -->
-            <div id="trans-yo">
+            <div id="trans-yo" style="padding:12px 18px 12px;border-bottom:1px solid var(--border)"><div style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-family:'Cinzel',serif">🇳🇬 Yorùbá</div>
               <div class="trans-field"><label>Title (Yorùbá)</label><textarea id="t_yo_title" rows="1" style="min-height:44px"></textarea></div>
               <div class="trans-field"><label>Verse Text (Yorùbá)</label><textarea id="t_yo_verse"></textarea></div>
               <div class="trans-field"><label>Reflection Paragraph 1</label><textarea id="t_yo_r1"></textarea></div>
@@ -740,13 +746,22 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
               <div class="trans-field"><label>Prayer (Yorùbá)</label><textarea id="t_yo_prayer"></textarea></div>
             </div>
             <!-- Pidgin tab -->
-            <div id="trans-pcm" style="display:none">
+            <div id="trans-pcm" style="padding:12px 18px 12px;border-bottom:1px solid var(--border)"><div style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-family:'Cinzel',serif">🇳🇬 Naija Pidgin</div>
               <div class="trans-field"><label>Title (Pidgin)</label><textarea id="t_pcm_title" rows="1" style="min-height:44px"></textarea></div>
               <div class="trans-field"><label>Verse Text (Pidgin)</label><textarea id="t_pcm_verse"></textarea></div>
               <div class="trans-field"><label>Reflection Paragraph 1</label><textarea id="t_pcm_r1"></textarea></div>
               <div class="trans-field"><label>Reflection Paragraph 2</label><textarea id="t_pcm_r2"></textarea></div>
               <div class="trans-field"><label>Reflection Paragraph 3</label><textarea id="t_pcm_r3"></textarea></div>
               <div class="trans-field"><label>Prayer (Pidgin)</label><textarea id="t_pcm_prayer"></textarea></div>
+            </div>
+            <!-- French tab -->
+            <div id="trans-fr" style="padding:12px 18px 12px;"><div style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-family:'Cinzel',serif">🇫🇷 Français</div>
+              <div class="trans-field"><label>Titre (Français)</label><textarea id="t_fr_title" rows="1" style="min-height:44px"></textarea></div>
+              <div class="trans-field"><label>Verset (Français)</label><textarea id="t_fr_verse"></textarea></div>
+              <div class="trans-field"><label>Réflexion 1</label><textarea id="t_fr_r1"></textarea></div>
+              <div class="trans-field"><label>Réflexion 2</label><textarea id="t_fr_r2"></textarea></div>
+              <div class="trans-field"><label>Réflexion 3</label><textarea id="t_fr_r3"></textarea></div>
+              <div class="trans-field"><label>Prière (Français)</label><textarea id="t_fr_prayer"></textarea></div>
             </div>
           </div>
         </div>
@@ -756,7 +771,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text-1);font-family:'
           <span style="font-size:1.2rem">🆓</span>
           <div>
             <div style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:3px">Free Auto-Translation</div>
-            <div style="font-size:0.72rem;color:var(--text-3)">Yorùbá via MyMemory · Pidgin auto-generated · No account needed</div>
+            <div style="font-size:0.72rem;color:var(--text-3)">Yorùbá · Français via MyMemory · Pidgin auto-generated · No account needed</div>
           </div>
         </div>
 
@@ -869,8 +884,48 @@ ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS verse_pcm text;
 ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_1_pcm text;
 ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_2_pcm text;
 ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_3_pcm text;
-ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS prayer_pcm text;</div>
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS prayer_pcm text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS title_fr text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS verse_fr text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_1_fr text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_2_fr text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS reflection_3_fr text;
+ALTER TABLE devotionals ADD COLUMN IF NOT EXISTS prayer_fr text;</div>
         <button class="sql-copy" onclick="navigator.clipboard.writeText(document.querySelectorAll('.sql-box')[0].textContent).then(()=>toast('SQL copied!'))">📋 Copy Migration SQL</button>
+
+        <div style="margin:24px 0 8px;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold)">✦ Prayer Wall Table</div>
+        <div class="sql-box">-- Prayer Wall table
+CREATE TABLE IF NOT EXISTS prayer_requests (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     TEXT NOT NULL,
+  text        TEXT NOT NULL,
+  category    TEXT DEFAULT 'General',
+  anonymous   BOOLEAN DEFAULT false,
+  pray_count  INTEGER DEFAULT 0,
+  answered    BOOLEAN DEFAULT false,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Allow anyone to read all prayer requests
+CREATE POLICY "Public read prayer_requests" ON prayer_requests
+  FOR SELECT USING (true);
+
+-- Allow authenticated users to insert their own
+CREATE POLICY "Insert own prayer_requests" ON prayer_requests
+  FOR INSERT WITH CHECK (true);
+
+-- Allow users to update their own (for answered + pray_count)
+CREATE POLICY "Update prayer_requests" ON prayer_requests
+  FOR UPDATE USING (true);
+
+-- Allow users to delete their own
+CREATE POLICY "Delete own prayer_requests" ON prayer_requests
+  FOR DELETE USING (auth.uid()::text = user_id OR user_id = 'anonymous');
+
+-- Enable RLS
+ALTER TABLE prayer_requests ENABLE ROW LEVEL SECURITY;</div>
+        <button class="sql-copy" onclick="navigator.clipboard.writeText(document.querySelectorAll('.sql-box')[1].textContent).then(()=>toast('SQL copied!'))">📋 Copy Prayer Wall SQL</button>
+
 
         <p style="font-size:0.88rem;color:var(--text-2);line-height:1.7;margin-bottom:16px;font-style:italic">
           Run this SQL in your Supabase project → SQL Editor → New Query to create the devotionals table and set up the admin write policy.
@@ -1126,6 +1181,7 @@ function showTransTab(lang, btn) {
   btn.classList.add('active');
   document.getElementById('trans-yo').style.display  = lang === 'yo'  ? 'block' : 'none';
   document.getElementById('trans-pcm').style.display = lang === 'pcm' ? 'block' : 'none';
+  document.getElementById('trans-fr').style.display  = lang === 'fr'  ? 'block' : 'none';
 }
 
 async function translateDevotional() {
@@ -1281,20 +1337,179 @@ ${devotionalText}`;
     document.getElementById('t_yo_r3').value     = yoResults.r3;
     document.getElementById('t_yo_prayer').value = yoResults.prayer;
 
-    statusEl.textContent = 'Generating Pidgin version…';
+    // Pidgin: translate field by field using deep substitution
+    statusEl.textContent = 'Generating Naija Pidgin version…';
     await new Promise(r => setTimeout(r, 200));
 
-    // Pidgin: apply substitutions to English text
-    document.getElementById('t_pcm_title').value  = toPidgin(englishVals.title);
-    document.getElementById('t_pcm_verse').value  = toPidgin(englishVals.verse);
-    document.getElementById('t_pcm_r1').value     = toPidgin(englishVals.r1);
-    document.getElementById('t_pcm_r2').value     = toPidgin(englishVals.r2);
-    document.getElementById('t_pcm_r3').value     = toPidgin(englishVals.r3);
-    document.getElementById('t_pcm_prayer').value = toPidgin(englishVals.prayer);
+    function toPidginDeep(text) {
+      if (!text) return '';
+      let t = text;
 
-    statusEl.textContent = '✦ Done! Review and edit translations before saving.';
+      // ── Contractions & negatives ──
+      t = t.replace(/won't/gi, "no go");
+      t = t.replace(/can't/gi, "no fit");
+      t = t.replace(/cannot/gi, "no fit");
+      t = t.replace(/don't/gi, "no");
+      t = t.replace(/doesn't/gi, "no");
+      t = t.replace(/didn't/gi, "no");
+      t = t.replace(/wouldn't/gi, "no go");
+      t = t.replace(/shouldn't/gi, "no suppose");
+      t = t.replace(/isn't/gi, "no be");
+      t = t.replace(/aren't/gi, "no be");
+      t = t.replace(/wasn't/gi, "no be");
+      t = t.replace(/weren't/gi, "no be");
+      t = t.replace(/hasn't/gi, "never");
+      t = t.replace(/haven't/gi, "never");
+      t = t.replace(/hadn't/gi, "never");
+
+      // ── To be ──
+      t = t.replace(/you are/gi, "you be");
+      t = t.replace(/we are/gi, "we be");
+      t = t.replace(/they are/gi, "dem be");
+      t = t.replace(/I am/gi, "I be");
+      t = t.replace(/he is/gi, "e be");
+      t = t.replace(/she is/gi, "e be");
+      t = t.replace(/it is/gi, "e be");
+      t = t.replace(/there is/gi, "e get");
+      t = t.replace(/there are/gi, "e get");
+      t = t.replace(/was/gi, "dey");
+      t = t.replace(/were/gi, "dey");
+
+      // ── Have/has/had ──
+      t = t.replace(/have/gi, "get");
+      t = t.replace(/has/gi, "get");
+      t = t.replace(/had/gi, "get");
+
+      // ── Pronouns ──
+      t = t.replace(/they/gi, "dem");
+      t = t.replace(/them/gi, "dem");
+      t = t.replace(/their/gi, "dem");
+      t = t.replace(/themselves/gi, "demself");
+      t = t.replace(/himself/gi, "imself");
+      t = t.replace(/herself/gi, "imself");
+      t = t.replace(/yourself/gi, "yourself");
+
+      // ── Common words ──
+      t = t.replace(/what/gi, "wetin");
+      t = t.replace(/something/gi, "something");
+      t = t.replace(/everything/gi, "everything");
+      t = t.replace(/nothing/gi, "nothing");
+      t = t.replace(/very/gi, "well well");
+      t = t.replace(/really/gi, "well well");
+      t = t.replace(/this/gi, "dis");
+      t = t.replace(/these/gi, "dese");
+      t = t.replace(/those/gi, "dose");
+      t = t.replace(/that/gi, "dat");
+      t = t.replace(/the/gi, "di");
+      t = t.replace(/just/gi, "just");
+      t = t.replace(/only/gi, "only");
+      t = t.replace(/now/gi, "now now");
+      t = t.replace(/already/gi, "don already");
+      t = t.replace(/still/gi, "still dey");
+      t = t.replace(/again/gi, "again");
+      t = t.replace(/because/gi, "because");
+      t = t.replace(/but/gi, "but");
+      t = t.replace(/so/gi, "so");
+      t = t.replace(/when/gi, "when");
+      t = t.replace(/where/gi, "where");
+      t = t.replace(/how/gi, "how");
+      t = t.replace(/why/gi, "why");
+      t = t.replace(/who/gi, "who");
+      t = t.replace(/like/gi, "like");
+
+      // ── Verbs ──
+      t = t.replace(/know/gi, "know");
+      t = t.replace(/see/gi, "see");
+      t = t.replace(/come/gi, "come");
+      t = t.replace(/go/gi, "go");
+      t = t.replace(/give/gi, "give");
+      t = t.replace(/take/gi, "take");
+      t = t.replace(/make/gi, "make");
+      t = t.replace(/say/gi, "talk");
+      t = t.replace(/said/gi, "talk say");
+      t = t.replace(/tell/gi, "tell");
+      t = t.replace(/told/gi, "tell");
+      t = t.replace(/ask/gi, "ask");
+      t = t.replace(/put/gi, "put");
+      t = t.replace(/keep/gi, "keep");
+      t = t.replace(/let/gi, "make");
+      t = t.replace(/need/gi, "need");
+      t = t.replace(/want/gi, "want");
+      t = t.replace(/try/gi, "try");
+      t = t.replace(/worry/gi, "fear");
+      t = t.replace(/fear/gi, "fear");
+      t = t.replace(/believe/gi, "believe");
+      t = t.replace(/trust/gi, "trust");
+      t = t.replace(/pray/gi, "pray");
+      t = t.replace(/remember/gi, "remember");
+      t = t.replace(/forget/gi, "forget");
+      t = t.replace(/forgive/gi, "forgive");
+      t = t.replace(/receive/gi, "receive");
+      t = t.replace(/accept/gi, "accept");
+      t = t.replace(/help/gi, "help");
+      t = t.replace(/love/gi, "love");
+      t = t.replace(/carry/gi, "carry");
+      t = t.replace(/walk/gi, "waka");
+      t = t.replace(/run/gi, "run");
+      t = t.replace(/stand/gi, "stand");
+      t = t.replace(/sit/gi, "sit down");
+      t = t.replace(/rise/gi, "rise up");
+      t = t.replace(/fall/gi, "fall");
+      t = t.replace(/fight/gi, "fight");
+      t = t.replace(/win/gi, "win");
+
+      // ── Spiritual & church words — keep as-is ──
+      // God, Jesus, Lord, Holy Spirit, Bible, prayer, faith, grace, mercy,
+      // salvation, gospel, church, Amen, glory, praise, worship — unchanged
+
+      // ── Past tense -ed endings (basic) ──
+      t = t.replace(/(\w+)ed/g, (match, base) => {
+        const keepAsIs = ['blessed','called','filled','sealed','saved','loved',
+          'placed','raised','healed','freed','named','confirmed','moved'];
+        if (keepAsIs.includes(match.toLowerCase())) return match;
+        return 'don ' + base;
+      });
+
+      // ── Present continuous -ing ──
+      t = t.replace(/is (\w+ing)/gi, "dey $1");
+      t = t.replace(/are (\w+ing)/gi, "dey $1");
+
+      // ── Add "o" for warmth at sentence ends ──
+      t = t.replace(/\.\s*$/gm, ' o.');
+      t = t.replace(/!\s*$/gm, ' o!');
+
+      return t;
+    }
+
+    document.getElementById('t_pcm_title').value  = toPidginDeep(englishVals.title);
+    document.getElementById('t_pcm_verse').value  = toPidginDeep(englishVals.verse);
+    document.getElementById('t_pcm_r1').value     = toPidginDeep(englishVals.r1);
+    document.getElementById('t_pcm_r2').value     = toPidginDeep(englishVals.r2);
+    document.getElementById('t_pcm_r3').value     = toPidginDeep(englishVals.r3);
+    document.getElementById('t_pcm_prayer').value = toPidginDeep(englishVals.prayer);
+
+    // Translate to French using MyMemory API
+    statusEl.textContent = 'Translating to Français…';
+    const frResults = {};
+    for (const f of fields) {
+      if (englishVals[f]) {
+        statusEl.textContent = `Translating to Français (${f})…`;
+        frResults[f] = await translateField(englishVals[f], 'fr');
+        await new Promise(r => setTimeout(r, 300));
+      } else {
+        frResults[f] = '';
+      }
+    }
+    document.getElementById('t_fr_title').value  = frResults.title;
+    document.getElementById('t_fr_verse').value  = frResults.verse;
+    document.getElementById('t_fr_r1').value     = frResults.r1;
+    document.getElementById('t_fr_r2').value     = frResults.r2;
+    document.getElementById('t_fr_r3').value     = frResults.r3;
+    document.getElementById('t_fr_prayer').value = frResults.prayer;
+
+    statusEl.textContent = '✦ Done! All 3 languages translated — scroll down to review Yorùbá, Pidgin and Français.';
     statusEl.style.color = 'var(--gold)';
-    toast('✦ Translations ready — please review them');
+    toast('✦ Yorùbá + Pidgin + Français ready — scroll to review all 3');
 
   } catch(err) {
     console.error('Translation error:', err);
@@ -1335,30 +1550,34 @@ async function saveDevotional() {
   btn.disabled = true;
   btn.innerHTML = '<div class="ld" style="padding:0;gap:4px"><span style="width:5px;height:5px"></span><span style="width:5px;height:5px"></span><span style="width:5px;height:5px"></span></div> Saving…';
 
-  // Gather translations if present
-  const transPanel = document.getElementById('transPanel');
-  const hasTranslations = transPanel && transPanel.style.display !== 'none';
-
+  // Always gather translations — whether panel is visible or not
   const payload = {
     date, title, verse, verse_ref: ref,
     reflection_1: r1 || null,
     reflection_2: r2 || null,
     reflection_3: r3 || null,
     prayer, tags,
-    // Yoruba
-    title_yo:        hasTranslations ? (document.getElementById('t_yo_title')?.value.trim()  || null) : null,
-    verse_yo:        hasTranslations ? (document.getElementById('t_yo_verse')?.value.trim()  || null) : null,
-    reflection_1_yo: hasTranslations ? (document.getElementById('t_yo_r1')?.value.trim()    || null) : null,
-    reflection_2_yo: hasTranslations ? (document.getElementById('t_yo_r2')?.value.trim()    || null) : null,
-    reflection_3_yo: hasTranslations ? (document.getElementById('t_yo_r3')?.value.trim()    || null) : null,
-    prayer_yo:       hasTranslations ? (document.getElementById('t_yo_prayer')?.value.trim() || null) : null,
-    // Pidgin
-    title_pcm:        hasTranslations ? (document.getElementById('t_pcm_title')?.value.trim()  || null) : null,
-    verse_pcm:        hasTranslations ? (document.getElementById('t_pcm_verse')?.value.trim()  || null) : null,
-    reflection_1_pcm: hasTranslations ? (document.getElementById('t_pcm_r1')?.value.trim()    || null) : null,
-    reflection_2_pcm: hasTranslations ? (document.getElementById('t_pcm_r2')?.value.trim()    || null) : null,
-    reflection_3_pcm: hasTranslations ? (document.getElementById('t_pcm_r3')?.value.trim()    || null) : null,
-    prayer_pcm:       hasTranslations ? (document.getElementById('t_pcm_prayer')?.value.trim() || null) : null,
+    // Yoruba — always include if filled
+    title_yo:        document.getElementById('t_yo_title')?.value.trim()   || null,
+    verse_yo:        document.getElementById('t_yo_verse')?.value.trim()   || null,
+    reflection_1_yo: document.getElementById('t_yo_r1')?.value.trim()     || null,
+    reflection_2_yo: document.getElementById('t_yo_r2')?.value.trim()     || null,
+    reflection_3_yo: document.getElementById('t_yo_r3')?.value.trim()     || null,
+    prayer_yo:       document.getElementById('t_yo_prayer')?.value.trim() || null,
+    // Pidgin — always include if filled
+    title_pcm:        document.getElementById('t_pcm_title')?.value.trim()   || null,
+    verse_pcm:        document.getElementById('t_pcm_verse')?.value.trim()   || null,
+    reflection_1_pcm: document.getElementById('t_pcm_r1')?.value.trim()     || null,
+    reflection_2_pcm: document.getElementById('t_pcm_r2')?.value.trim()     || null,
+    reflection_3_pcm: document.getElementById('t_pcm_r3')?.value.trim()     || null,
+    prayer_pcm:       document.getElementById('t_pcm_prayer')?.value.trim() || null,
+    // French — always include if filled
+    title_fr:        document.getElementById('t_fr_title')?.value.trim()   || null,
+    verse_fr:        document.getElementById('t_fr_verse')?.value.trim()   || null,
+    reflection_1_fr: document.getElementById('t_fr_r1')?.value.trim()     || null,
+    reflection_2_fr: document.getElementById('t_fr_r2')?.value.trim()     || null,
+    reflection_3_fr: document.getElementById('t_fr_r3')?.value.trim()     || null,
+    prayer_fr:       document.getElementById('t_fr_prayer')?.value.trim() || null,
   };
 
   let error;
